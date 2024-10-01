@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Define the MongoDB connection URL
-const mongoURL = process.env.MONGODB_URL_LOCAL; // Use this if you want to connect to a local database
+// Use local or Atlas URL based on your environment setup
+const mongoURL = process.env.MONGODB_URL ;
 
 if (!mongoURL) {
     console.error('MongoDB URI is not defined in the environment variables');
-    process.exit(1); // Exit the process if the URI is not available
+    process.exit(1); // Exit if the URI is not available
 }
 
 // Set up MongoDB connection
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    ssl: true,  // Ensure SSL/TLS is enabled
+    tlsAllowInvalidCertificates: true, // Add this if using self-signed or dev certificates (use cautiously)
+    serverSelectionTimeoutMS: 5000, // Add timeout for connection attempts
 });
 
 // Get the default connection
